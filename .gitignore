@@ -1,6 +1,17 @@
-# R & RStudio temporary/session files
-.Rproj.user/
+# R session and history files
 .Rhistory
 .RData
 .Ruserdata
+.Rapp.history
+
+# RStudio project files
+.Rproj.user/
 *.Rproj
+
+# Scraped raw WIPO Excel/ZIP files (no longer needed in repo since data is bundled in app/wipo_bundle.rds)
+downloads/
+
+# Temporary R / OS files
+*.log
+.DS_Store
+Thumbs.db
