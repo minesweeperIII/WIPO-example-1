@@ -1,5 +1,19 @@
 # ==============================================================================
-# 4. Filtering only tables that can be made into Choropleth map
+# 1. Load necessary packages (Dashboard & Map App)
+# ==============================================================================
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(stringr)
+library(tibble)
+library(shiny)
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+
+# ==============================================================================
+# 2. Filtering only tables that can be made into Choropleth map
 # ==============================================================================
 
 extract_origin_tabs <- function(file_paths) {
@@ -53,7 +67,7 @@ master_origin_tabs <- extract_origin_tabs(files)
 
 
 # ==============================================================================
-# 5. Extracting data from excel files
+# 3. Extracting data from excel files
 # ==============================================================================
 read_clean_table <- function(path, sheet) {
   raw_sheet <- suppressMessages(
@@ -139,7 +153,7 @@ read_clean_table <- function(path, sheet) {
   ))
 }
 # ==============================================================================
-# 6. Load World Map & Country Name Normalizer
+# 4. Load World Map & Country Name Normalizer
 # ==============================================================================
 world_sf <- ne_countries(scale = "medium", returnclass = "sf") %>%
   filter(!is.na(name), iso_a3 != "ATA") %>% # <-- CHANGED: Drop NA names
@@ -177,7 +191,7 @@ clean_country_name <- function(x) {
 }
 
 # ==============================================================================
-# 7. Shiny UI 
+# 5. Shiny UI 
 # ==============================================================================
 options(shiny.sanitize.errors = FALSE)
 
@@ -215,7 +229,7 @@ ui <- fluidPage(
 )
 
 # ==============================================================================
-# 8. Shiny Server
+# 6. Shiny Server
 # ==============================================================================
 server <- function(input, output, session) {
   
