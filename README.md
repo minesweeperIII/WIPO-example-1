@@ -11,7 +11,7 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 ```text
 ├── scraping.R         # Scrapes and extracts WIPO Excel/ZIP datasets into downloads/
 ├── shinyApp.R         # Parses Excel tables, normalizes country names, and launches the Shiny map app
-├── downloads/         # Created automatically by scraping.R to store WIPO datasets (gitignored)
+├── downloads/         # Created automatically by scraping.R to store WIPO datasets
 ├── .gitignore         # Ignores downloads/ and local R session files
 └── README.md          # Project documentation
 ```
