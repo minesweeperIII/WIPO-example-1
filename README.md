@@ -5,16 +5,6 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 
 ---
 
-## Table of Contents
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the App](#running-the-app)
-- [Project Structure](#project-structure)
-- [Configuration & Customization](#configuration--customization)
-- [Contributing](#contributing)
-- [License & Data Attribution](#license--data-attribution)
-
 ## Getting Started
 
 ### Prerequisites
