@@ -2,20 +2,10 @@
 # 1. Load necessary packages
 # ==============================================================================
 library(rvest)
-library(stringr)
 library(httr2)
-library(readxl)
-library(readr)
+library(stringr)
 library(tibble)
 library(dplyr)
-library(tidyverse)
-library(digest)
-library(purrr)
-library(shiny)
-library(ggplot2)
-library(sf)
-library(rnaturalearth)
-library(jsonlite)
 
 # ==============================================================================
 # 2. Scraping WIPO website functions
