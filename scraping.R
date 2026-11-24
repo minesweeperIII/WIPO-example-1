@@ -232,7 +232,7 @@ clean_country_name <- function(x) {
 }
 
 # ==============================================================================
-# 5. Pre-compute all tables & lightweight world map for Shinylive
+# 5. Pre-compute all tables & world map for Shinylive
 # ==============================================================================
 files <- list.files(path = output_dir, full.names = TRUE)
 

@@ -1,5 +1,5 @@
 # ==============================================================================
-# 1. Load necessary packages (Lightweight Shinylive Runtime)
+# 1. Load necessary packages
 # ==============================================================================
 library(shiny)
 library(dplyr)
