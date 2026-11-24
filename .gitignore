@@ -1,0 +1,6 @@
+# R & RStudio temporary/session files
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
