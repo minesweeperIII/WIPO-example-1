@@ -48,11 +48,7 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 
 #### 1. Scraping data    
 
-Run the scraping script to download and extract the WIPO Excel workbooks into the "downloads" folder:
-
-```r
-source("scraping.R")
-```    
+Run the "scraping.R" script to download and extract the WIPO Excel workbooks into the "downloads" folder  
 
 #### 2. Running the App
 
