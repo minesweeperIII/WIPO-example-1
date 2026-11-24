@@ -1,19 +1,29 @@
 # World Intellectual Property Indicators (WIPI) 2026 — Choropleth Map with R
 
-An automated data pipeline and interactive **R Shiny** dashboard that scrapes statistical datasets from the **World Intellectual Property Organization (WIPO)**, parses country-level Excel tables, and renders global choropleth maps.
+An automated data pipeline that scrapes statistical datasets from the **World Intellectual Property Organization (WIPO)** and renders interactive global choropleth maps.
 
 **Data Source:** [WIPO World Intellectual Property Indicators](https://www.wipo.int/publications/en/details.jsp?id=4886)
+
+**Live App:** https://minesweeperiii.github.io/WIPO-example-1/         
 
 ---
 
 ## Project Structure   
 
 ```text
-├── scraping.R         # Scrapes and extracts WIPO Excel/ZIP datasets into downloads/
-├── shinyApp.R         # Parses Excel tables, normalizes country names, and launches the Shiny map app
-├── downloads/         # Created automatically by scraping.R to store WIPO datasets
-├── .gitignore         # Ignores local R session files
-└── README.md          # Project documentation
+├── scraping.R             # Scrapes WIPO datasets, cleans tables, and bundles data into app/wipo_bundle.rds
+├── app/
+│   ├── app.R              # Shiny choropleth map application
+│   └── wipo_bundle.rds    # Pre-processed WIPO tables and simplified Natural Earth world geometry
+├── docs/                  # Exported static Shinylive/WebAssembly site 
+│   ├── index.html
+|   ├── app.json
+|   ├── shinylive-sw.js
+│   ├── shinylive/
+│   └── .nojekyll          # Only important for GitHub Pages hosting
+├── downloads/             # Raw scraped WIPO Excel/ZIP files (gitignored)
+├── .gitignore
+└── README.md
 ```
 
 ## Getting Started
@@ -25,36 +35,42 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 
 ### Installation
 
-1. **Install required R packages:**
+**Install required R packages:**
    
    ```r
-   install.packages(c("rvest",
-   "httr2",
-   "readxl",
-   "stringr",
-   "tibble",
-   "dplyr",
-   "tidyr",
-   "purrr",
-   "ggplot2",
-   "shiny",
-   "sf",
-   "rnaturalearth",
-   "rnaturalearthdata",
-   "scales"))
+   install.packages(c(
+   "rvest", "httr2", "stringr", "tibble", "dplyr",
+   "readxl", "tidyr", "purrr", "sf", "rnaturalearth",
+   "shiny", "ggplot2", "shinylive", "httpuv"
+   ))
    ```
 
-### Usage
+### Usage    
 
-#### 1. Scraping data    
+Run the following from the project root directory in R:   
 
-Run the "scraping.R" script to download and extract the WIPO Excel workbooks into the "downloads" folder  
+#### 1. Scraping data, clean, and generate app/wipo_bundle.rds to prepare for Shiny             
 
-#### 2. Running the App
-
-Once the datasets are downloaded, launch the interactive Shiny dashboard from R or RStudio:    
+```r   
+source("scraping.R")
+```
+#### 2. Locally launch Shiny app 
 
 ```r
-shiny::runApp("shinyApp.R")
+shiny::runApp("app")
 ```
+### Optional 
+#### After Step 1, export the Shiny app to docs/ as static WebAssembly files      
+
+```r
+shinylive::export(appdir = "app", destdir = "docs")
+```
+#### Preview static interactive Shiny app locally
+
+The loading is slow at the beginning (same as the Live App). 
+
+```r
+httpuv::runStaticServer("docs")
+```
+
 

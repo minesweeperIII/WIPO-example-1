@@ -263,7 +263,10 @@ world_sf <- ne_countries(scale = "small", returnclass = "sf") %>%
   distinct(name, .keep_all = TRUE) %>%
   select(name, geometry)
 
-dir.create("app", showWarnings = FALSE)
+if (!dir.exists("app")) {
+  dir.create("app", recursive = TRUE, showWarnings = FALSE)
+}
+
 saveRDS(
   list(tables = precomputed_tables, world_sf = world_sf),
   file = "app/wipo_bundle.rds",
