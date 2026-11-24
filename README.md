@@ -1,16 +1,14 @@
 # World Intellectual Property Indicators (WIPI) 2026 — Choropleth Map with R
 
-An automated data pipeline and interactive **R Shiny** dashboard that scrapes statistical datasets from the **World Intellectual Property Organization (WIPO)**, parses country-level Excel tables, and renders global choropleth maps.
+An automated data pipeline that scrapes statistical datasets from the **World Intellectual Property Organization (WIPO)** and renders interactive global choropleth maps.
 
 **Data Source:** [WIPO World Intellectual Property Indicators](https://www.wipo.int/publications/en/details.jsp?id=4886)
 
-**Live App:** https://minesweeperiii.github.io/WIPO-example-1/
+**Live App:** https://minesweeperiii.github.io/WIPO-example-1/         
 
 ---
 
 ## Project Structure   
-
-## Project Structure
 
 ```text
 ├── scraping.R             # Scrapes WIPO datasets, cleans tables, and bundles data into app/wipo_bundle.rds
@@ -22,7 +20,7 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 |   ├── app.json
 |   ├── shinylive-sw.js
 │   ├── shinylive/
-│   └── .nojekyll
+│   └── .nojekyll          # Only important for GitHub Pages hosting
 ├── downloads/             # Raw scraped WIPO Excel/ZIP files (gitignored)
 ├── .gitignore
 └── README.md
@@ -56,18 +54,20 @@ Run the following from the project root directory in R:
 ```r   
 source("scraping.R")
 ```
+#### 2. Locally launch Shiny app 
 
-#### 2. Export the Shiny app to docs/ as static WebAssembly files       
+```r
+shiny::runApp("app")
+```
+### Optional 
+#### After Step 1, export the Shiny app to docs/ as static WebAssembly files      
+
 ```r
 shinylive::export(appdir = "app", destdir = "docs")
 ```
-#### 3. Ensure GitHub Pages does not ignore WebAssembly asset folders           
-```r
-file.create("docs/.nojekyll")
-```
-#### 4. Preview locally   
+#### Preview static interactive Shiny app locally
 
-The loading is slow at the beginning. 
+The loading is slow at the beginning (same as the Live App). 
 
 ```r
 httpuv::runStaticServer("docs")
