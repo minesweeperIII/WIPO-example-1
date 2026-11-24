@@ -1,6 +1,9 @@
 # ==============================================================================
-# 1. Load necessary packages
+# 1. Load necessary packages & WebR options
 # ==============================================================================
+options(shiny.useragg = TRUE)
+options(shiny.sanitize.errors = FALSE)
+
 library(shiny)
 library(dplyr)
 library(tidyr)
@@ -8,6 +11,7 @@ library(stringr)
 library(tibble)
 library(ggplot2)
 library(sf)
+library(scales)
 
 # ==============================================================================
 # 2. Load pre-processed tables & world map
@@ -16,11 +20,12 @@ bundle <- readRDS("wipo_bundle.rds")
 precomputed_tables <- bundle$tables
 world_sf <- bundle$world_sf
 
+# Strip PROJ/CRS metadata so WebR does not fail on GDAL/PROJ database lookups
+sf::st_crs(world_sf) <- NA
+
 # ==============================================================================
 # 3. Shiny UI
 # ==============================================================================
-options(shiny.sanitize.errors = FALSE)
-
 ui <- fluidPage(
   titlePanel("World Intellectual Property Indicators 2026"),
   
@@ -64,7 +69,7 @@ server <- function(input, output, session) {
   table_structure <- reactive({
     res <- parsed_tab()
     df <- res$table_data
-    req(!is.null(df), ncol(df) >= 2)
+    req(!is.null(df), ncol(df) >= 2, nrow(df) >= 1)
     
     other_cols <- setdiff(names(df)[-1], ".country_match")
     
@@ -145,15 +150,21 @@ server <- function(input, output, session) {
       plotname <- paste0("world_map_", i)
       
       output[[plotname]] <- renderPlot({
+        # Guard against transient mismatches while switching tables
+        req(col_name %in% names(df_mapped))
+        if (!is.null(facet_col)) {
+          req(facet_col %in% names(df_mapped))
+        }
+        
         if (!is.null(facet_col)) {
           facet_levels <- unique(na.omit(trimws(as.character(df_mapped[[facet_col]]))))
+          req(length(facet_levels) >= 1)
           
           base_grid <- tidyr::crossing(
             tibble(name = world_sf$name),
             tibble(!!facet_col := facet_levels)
           ) %>%
-            left_join(world_sf, by = "name") %>%
-            st_as_sf()
+            left_join(world_sf, by = "name")
           
           plot_df <- df_mapped %>%
             transmute(
@@ -164,7 +175,8 @@ server <- function(input, output, session) {
             filter(!is.na(.data[[facet_col]]), .data[[facet_col]] != "")
           
           map_data <- base_grid %>%
-            left_join(plot_df, by = c("name" = ".country_match", facet_col))
+            left_join(plot_df, by = c("name" = ".country_match", facet_col)) %>%
+            st_as_sf(sf_column_name = "geometry")
           
           p <- ggplot(map_data) +
             geom_sf(aes(fill = val), color = "white", linewidth = 0.12) +
@@ -178,7 +190,8 @@ server <- function(input, output, session) {
             )
           
           map_data <- world_sf %>%
-            left_join(plot_df, by = c("name" = ".country_match"))
+            left_join(plot_df, by = c("name" = ".country_match")) %>%
+            st_as_sf(sf_column_name = "geometry")
           
           p <- ggplot(map_data) +
             geom_sf(aes(fill = val), color = "white", linewidth = 0.15)
@@ -218,7 +231,7 @@ server <- function(input, output, session) {
             legend.position = "bottom",
             legend.key.width = unit(2, "cm")
           )
-      })
+      }, res = 96)
     })
   })
 }
