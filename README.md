@@ -35,7 +35,7 @@ An automated data pipeline that scrapes statistical datasets from the **World In
 
 ### Installation
 
-1. **Install required R packages:**
+**Install required R packages:**
    
    ```r
    install.packages(c(
