@@ -1,3 +1,6 @@
+# ==============================================================================
+# 1. Load necessary packages
+# ==============================================================================
 library(rvest)
 library(stringr)
 library(httr2)
@@ -14,6 +17,9 @@ library(sf)
 library(rnaturalearth)
 library(jsonlite)
 
+# ==============================================================================
+# 2. Scraping WIPO website functions
+# ==============================================================================
 extract_wipo_links <- function(url,x_path) {
   page <- read_html(url)
   link_nodes <- page %>%
@@ -38,11 +44,6 @@ extract_wipo_links <- function(url,x_path) {
   distinct(href, .keep_all = TRUE)
   
 }
-
-url <- "https://www.wipo.int/publications/en/details.jsp?id=4886"
-x_path <- '//*[@id="tech"]/following-sibling::*//li[.//a]'
-files_info_df <- (extract_wipo_links(url, x_path))
-output_dir = "downloads"
 
 get_wipo_file <- function(url,x_path, output_dir = "downloads") {
   files_info_df <- (extract_wipo_links(url, x_path))
@@ -77,8 +78,19 @@ get_wipo_file <- function(url,x_path, output_dir = "downloads") {
   }
 }
 
+# ==============================================================================
+# 3. Download files
+# ==============================================================================
+
+url <- "https://www.wipo.int/publications/en/details.jsp?id=4886"
+x_path <- '//*[@id="tech"]/following-sibling::*//li[.//a]'
+files_info_df <- (extract_wipo_links(url, x_path))
+output_dir = "downloads"
 get_wipo_file(url,x_path)
 
+# ==============================================================================
+# 4. Filtering only tables that can be made into Choropleth map
+# ==============================================================================
 
 extract_origin_tabs <- function(file_paths) {
 
@@ -96,20 +108,19 @@ extract_origin_tabs <- function(file_paths) {
       has_office_title <- !is.na(content_name) && 
         str_detect(content_name, regex("\\boffices?\\b", ignore_case = TRUE))
       if (has_office_title) next
+      
       # Detect completely empty rows
       is_empty <- raw_sheet %>%
         mutate(across(everything(), ~ is.na(.x) | trimws(as.character(.x)) == "")) %>%
         reduce(`&`)
-      
       last_blank <- ifelse((any(is_empty)), max(which(is_empty)), NA_integer_)
       skip_rows <- ifelse(!is.na(last_blank), last_blank, 2)
       
-      # 2. Read only the header row (n_max = 0) after the blank line and check column 1
+      # 2. Read only the header row after the blank line and check whether column 1 is named country or origin
       table_header <- read_excel(path, sheet = tab, skip = skip_rows, n_max = 0, .name_repair = "unique")
-      
       first_col <- trimws(names(table_header)[1])
-      
       keep <- !is.na(first_col) && str_detect(first_col, regex("^(origins?|countr(y|ies))$", ignore_case = TRUE))   
+      
       # 3. Store file path, tab name, and content name if condition is met
       if (keep) {
         results[[length(results) + 1]] <- tibble(
@@ -131,9 +142,8 @@ files <- list.files(
 master_origin_tabs <- extract_origin_tabs(files)
 
 
-
 # ==============================================================================
-# 1. Table Reader Function
+# 5. Extracting data from excel files
 # ==============================================================================
 read_clean_table <- function(path, sheet) {
   raw_sheet <- suppressMessages(
@@ -219,7 +229,7 @@ read_clean_table <- function(path, sheet) {
   ))
 }
 # ==============================================================================
-# 2. World Map & Country Name Normalizer
+# 6. Load World Map & Country Name Normalizer
 # ==============================================================================
 world_sf <- ne_countries(scale = "medium", returnclass = "sf") %>%
   filter(!is.na(name), iso_a3 != "ATA") %>% # <-- CHANGED: Drop NA names
@@ -257,7 +267,7 @@ clean_country_name <- function(x) {
 }
 
 # ==============================================================================
-# 3. Shiny UI (Uses `master_origin_tabs` directly with named-list choices)
+# 7. Shiny UI 
 # ==============================================================================
 options(shiny.sanitize.errors = FALSE)
 
@@ -295,7 +305,7 @@ ui <- fluidPage(
 )
 
 # ==============================================================================
-# 4. Shiny Server
+# 8. Shiny Server
 # ==============================================================================
 server <- function(input, output, session) {
   
