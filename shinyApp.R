@@ -116,6 +116,7 @@ read_clean_table <- function(path, sheet) {
         sheet = sheet,
         skip = start_row - 1,
         n_max = end_row - start_row,
+        na = c("", "...", "..", "-", "n/a", "N/A"), # <-- Treat WIPO missing symbols as NA
         .name_repair = "unique"
       )
     )
