@@ -1,17 +1,27 @@
 # World Intellectual Property Indicators (WIPI) 2026 — Choropleth Map with R
 
+An automated data pipeline and interactive **R Shiny** dashboard that scrapes statistical datasets from the **World Intellectual Property Organization (WIPO)**, parses country-level Excel tables, and renders global choropleth maps.
 
-An automated data pipeline and interactive **R Shiny** dashboard that scrapes statistical datasets from the **World Intellectual Property Organization (WIPO)**, and renders global choropleth maps.     
-WIPO site: https://www.wipo.int/publications/en/details.jsp?id=4886
+**Data Source:** [WIPO World Intellectual Property Indicators](https://www.wipo.int/publications/en/details.jsp?id=4886)
 
 ---
+
+## Project Structure   
+
+```text
+├── scraping.R         # Scrapes and extracts WIPO Excel/ZIP datasets into downloads/
+├── shinyApp.R         # Parses Excel tables, normalizes country names, and launches the Shiny map app
+├── downloads/         # Created automatically by scraping.R to store WIPO datasets (gitignored)
+├── .gitignore         # Ignores downloads/ and local R session files
+└── README.md          # Project documentation
+```
 
 ## Getting Started
 
 ### Prerequisites
 
 - **R** (`>= 4.1.0`)
-- An active internet connection on initial launch to fetch WIPO datasets.
+- An active internet connection when running scraping.R to fetch datasets from WIPO.
 
 ### Installation
 
@@ -38,20 +48,20 @@ WIPO site: https://www.wipo.int/publications/en/details.jsp?id=4886
    ))
    ```
 
-### Running the App
+### Usage
 
-Launch the Shiny application from R or RStudio:
+#### 1. Scraping data    
+
+Run the scraping script to download and extract the WIPO Excel workbooks into the "downloads" folder:
+```r     
+source("scraping.R")
+```    
+
+#### 2. Running the App
+
+Once the datasets are downloaded, launch the interactive Shiny dashboard from R or RStudio:    
 
 ```r
-shiny::runApp("scraping.R")
-```
-
-## Project Structure
-
-```text
-├── scraping.R              # Complete pipeline: WIPO scraper, Excel parser, spatial normalizer, and Shiny app
-├── downloads/         # Created automatically at runtime to store downloaded/extracted WIPO files (gitignored)
-├── .gitignore         # Recommended to ignore downloads/ and local R session files
-└── README.md          # Project documentation
+shiny::runApp("shinyApp.R")
 ```
 
