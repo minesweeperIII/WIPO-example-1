@@ -26,30 +26,31 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 ### Installation
 
 1. **Install required R packages:**
+   
    ```r
-   install.packages(c(
-  "rvest",
-  "httr2",
-  "readxl",
-  "stringr",
-  "tibble",
-  "dplyr",
-  "tidyr",
-  "purrr",
-  "ggplot2",
-  "shiny",
-  "sf",
-  "rnaturalearth",
-  "rnaturalearthdata",
-  "scales"
-))
+   install.packages(c("rvest",
+   "httr2",
+   "readxl",
+   "stringr",
+   "tibble",
+   "dplyr",
+   "tidyr",
+   "purrr",
+   "ggplot2",
+   "shiny",
+   "sf",
+   "rnaturalearth",
+   "rnaturalearthdata",
+   "scales"))
    ```
+
 ### Usage
 
 #### 1. Scraping data    
 
 Run the scraping script to download and extract the WIPO Excel workbooks into the "downloads" folder:
-```r     
+
+```r
 source("scraping.R")
 ```    
 
