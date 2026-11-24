@@ -4,16 +4,28 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 
 **Data Source:** [WIPO World Intellectual Property Indicators](https://www.wipo.int/publications/en/details.jsp?id=4886)
 
+**Live App:** https://minesweeperiii.github.io/WIPO-example-1/
+
 ---
 
 ## Project Structure   
 
+## Project Structure
+
 ```text
-├── scraping.R         # Scrapes and extracts WIPO Excel/ZIP datasets into downloads/
-├── shinyApp.R         # Parses Excel tables, normalizes country names, and launches the Shiny map app
-├── downloads/         # Created automatically by scraping.R to store WIPO datasets
-├── .gitignore         # Ignores local R session files
-└── README.md          # Project documentation
+├── scraping.R             # Scrapes WIPO datasets, cleans tables, and bundles data into app/wipo_bundle.rds
+├── app/
+│   ├── app.R              # Shiny choropleth map application
+│   └── wipo_bundle.rds    # Pre-processed WIPO tables and simplified Natural Earth world geometry
+├── docs/                  # Exported static Shinylive/WebAssembly site 
+│   ├── index.html
+|   ├── app.json
+|   ├── shinylive-sw.js
+│   ├── shinylive/
+│   └── .nojekyll
+├── downloads/             # Raw scraped WIPO Excel/ZIP files (gitignored)
+├── .gitignore
+└── README.md
 ```
 
 ## Getting Started
@@ -28,33 +40,37 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 1. **Install required R packages:**
    
    ```r
-   install.packages(c("rvest",
-   "httr2",
-   "readxl",
-   "stringr",
-   "tibble",
-   "dplyr",
-   "tidyr",
-   "purrr",
-   "ggplot2",
-   "shiny",
-   "sf",
-   "rnaturalearth",
-   "rnaturalearthdata",
-   "scales"))
+   install.packages(c(
+   "rvest", "httr2", "stringr", "tibble", "dplyr",
+   "readxl", "tidyr", "purrr", "sf", "rnaturalearth",
+   "shiny", "ggplot2", "shinylive", "httpuv"
+   ))
    ```
 
-### Usage
+### Usage    
 
-#### 1. Scraping data    
+Run the following from the project root directory in R:   
 
-Run the "scraping.R" script to download and extract the WIPO Excel workbooks into the "downloads" folder  
+#### 1. Scraping data, clean, and generate app/wipo_bundle.rds to prepare for Shiny             
 
-#### 2. Running the App
+```r   
+source("scraping.R")
+```
 
-Once the datasets are downloaded, launch the interactive Shiny dashboard from R or RStudio:    
+#### 2. Export the Shiny app to docs/ as static WebAssembly files       
+```r
+shinylive::export(appdir = "app", destdir = "docs")
+```
+#### 3. Ensure GitHub Pages does not ignore WebAssembly asset folders           
+```r
+file.create("docs/.nojekyll")
+```
+#### 4. Preview locally   
+
+The loading is slow at the beginning. 
 
 ```r
-shiny::runApp("shinyApp.R")
+httpuv::runStaticServer("docs")
 ```
+
 
