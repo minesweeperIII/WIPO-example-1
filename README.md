@@ -20,18 +20,11 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 ### Prerequisites
 
 - **R** (`>= 4.1.0`)
-- System geospatial libraries required by `sf` (**GDAL**, **GEOS**, and **PROJ** — pre-bundled on Windows/macOS CRAN binaries; install `libgdal-dev libgeos-dev libproj-dev` on Ubuntu/Debian).
 - An active internet connection on initial launch to fetch WIPO datasets.
 
 ### Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/<your-username>/<your-repo-name>.git
-   cd <your-repo-name>
-   ```
-
-2. **Install required R packages:**
+1. **Install required R packages:**
    ```r
    install.packages(c(
      "rvest",
@@ -59,17 +52,13 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 Launch the Shiny application from R or RStudio:
 
 ```r
-shiny::runApp("app.R")
+shiny::runApp("scraping.R")
 ```
-
-Once initialized, open the local URL printed in your R console (typically `http://127.0.0.1:xxxx`) in your browser.
-
----
 
 ## Project Structure
 
 ```text
-├── main.R              # Complete pipeline: WIPO scraper, Excel parser, spatial normalizer, and Shiny app
+├── scraping.R              # Complete pipeline: WIPO scraper, Excel parser, spatial normalizer, and Shiny app
 ├── downloads/         # Created automatically at runtime to store downloaded/extracted WIPO files (gitignored)
 ├── .gitignore         # Recommended to ignore downloads/ and local R session files
 └── README.md          # Project documentation
