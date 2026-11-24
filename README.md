@@ -28,26 +28,22 @@ An automated data pipeline and interactive **R Shiny** dashboard that scrapes st
 1. **Install required R packages:**
    ```r
    install.packages(c(
-     "rvest",
-     "stringr",
-     "httr2",
-     "readxl",
-     "readr",
-     "tibble",
-     "dplyr",
-     "tidyverse",
-     "digest",
-     "purrr",
-     "shiny",
-     "ggplot2",
-     "sf",
-     "rnaturalearth",
-     "rnaturalearthdata",
-     "jsonlite",
-     "scales"
-   ))
+  "rvest",
+  "httr2",
+  "readxl",
+  "stringr",
+  "tibble",
+  "dplyr",
+  "tidyr",
+  "purrr",
+  "ggplot2",
+  "shiny",
+  "sf",
+  "rnaturalearth",
+  "rnaturalearthdata",
+  "scales"
+))
    ```
-
 ### Usage
 
 #### 1. Scraping data    
