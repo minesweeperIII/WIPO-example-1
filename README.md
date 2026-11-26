@@ -1,4 +1,4 @@
-# World Intellectual Property Indicators (WIPI) 2026 — Choropleth Map with R
+# World Intellectual Property Indicators 2026 — Choropleth Map with R
 
 An automated data pipeline that scrapes statistical datasets from the **World Intellectual Property Organization (WIPO)** and renders interactive global choropleth maps.
 
