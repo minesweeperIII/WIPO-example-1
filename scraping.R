@@ -258,10 +258,15 @@ precomputed_tables <- setNames(
   master_origin_tabs$content_name
 )
 
+sf_use_s2(FALSE)
+
 world_sf <- ne_countries(scale = "small", returnclass = "sf") %>%
   filter(!is.na(name), iso_a3 != "ATA") %>%
   distinct(name, .keep_all = TRUE) %>%
-  select(name, geometry)
+  select(name, geometry) %>%
+  st_make_valid()
+
+sf_use_s2(TRUE)
 
 if (!dir.exists("app")) {
   dir.create("app", recursive = TRUE, showWarnings = FALSE)

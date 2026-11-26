@@ -16,7 +16,12 @@ library(scales)
 # ==============================================================================
 # 2. Load pre-processed tables & world map
 # ==============================================================================
-bundle <- readRDS("app/wipo_bundle.rds")
+bundle_path <- if (file.exists("wipo_bundle.rds")) {
+  "wipo_bundle.rds"
+} else if (file.exists("app/wipo_bundle.rds")) {
+  "app/wipo_bundle.rds"
+}
+bundle <- readRDS(bundle_path)
 precomputed_tables <- bundle$tables
 world_sf <- bundle$world_sf
 
